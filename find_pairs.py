@@ -36,8 +36,15 @@ class PairBuilder(object):
 
     input_fn = '/tmp/bp_ngrams.csv'
     output_fn = '/tmp/bp_ngram_pairs.csv'
-    threshold_distance = 10
+    ngram_dict_fn = '/tmp/bp_ngram_ids.csv'
+    threshold_distance = 30
+    
 
+    def __init__(self):
+        self.ngram_ids = dict()
+        for rownum, row in pd.read_csv(self.ngram_dict_fn, names=['nid', 'words']).iterrows():
+            self.ngram_ids[row.nid] = row.words
+        
     def run(self):
         indata = pd.read_csv(self.input_fn, names = ['doc_id', 'ngram_id', 'position'])
         outdata = defaultdict(list)
@@ -53,14 +60,19 @@ class PairBuilder(object):
         self.write_csv(outdata)
         return indata, outdata
 
-    def write_csv(self, outdata):
+    def write_csv(self, outdata, names=True):
         with open(self.output_fn, 'w') as outf:
             writer = csv.writer(outf)
             for k,v in outdata.items():
                 if len(v) > 1:
-                    row = list(k) + v
+                    if names:
+                        labels = [self.ngram_ids[x] for x in k]
+                        row = list(k) + labels + v
+                    else:
+                        row = list(k) + v
                     writer.writerow(row)
 
-        
-        
-        
+
+if __name__ == '__main__':
+    pb = PairBuilder()
+    pb.run()

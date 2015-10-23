@@ -14,7 +14,7 @@ import logging
 
 class NgramGenerator(object):
     
-    MAX_FILES = 20
+    MAX_FILES = 99999
 
     def __init__(self, *args, **kwargs):
         self.ngram_dict = {}
