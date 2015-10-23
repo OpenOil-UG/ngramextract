@@ -1,0 +1,10 @@
+*.pyc
+data/*
+*.DS_Store
+tasks/*
+filings.txt
+listing.txt
+*.pickle
+part-*
+mrjob.conf
+scored.*
